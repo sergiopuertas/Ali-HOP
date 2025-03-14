@@ -130,7 +130,7 @@ if "selected_electrolytes" not in st.session_state:
     st.session_state.selected_electrolytes = []
 with cols[1]:
     with st.empty():
-        st.container(height=200, border=False)
+        st.container(height=230, border=False)
     st.markdown('<div id="target-section"></div>', unsafe_allow_html=True)
     st.header("Selecciona los electrolitos y descubre qué alimentos pueden ser desaconsejables para ti")
     st.container(height=30, border=False)
