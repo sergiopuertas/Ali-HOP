@@ -78,7 +78,7 @@ if not st.session_state.messages:
         stream_message("Son sustancias que se encuentran en el cuerpo humano en forma predominante de sales minerales, tales como sodio, potasio o fósforo.🔋", speaker="left")
 
     with right_col:
-        st.container(height=85, border=False)
+        st.container(height=95, border=False)
         stream_message("¡Ah vale, lo entiendo! Buscaré los datos.🔎", speaker="right")
 
     with left_col:
@@ -130,7 +130,7 @@ if "selected_electrolytes" not in st.session_state:
     st.session_state.selected_electrolytes = []
 with cols[1]:
     with st.empty():
-        st.container(height=200, border=False)
+        st.container(height=230, border=False)
     st.markdown('<div id="target-section"></div>', unsafe_allow_html=True)
     st.header("Selecciona los electrolitos y descubre qué alimentos pueden ser desaconsejables para ti")
     st.container(height=30, border=False)
@@ -161,10 +161,6 @@ with cols[1]:
         "limitada": 2,
         "desaconsejada": 3
     }
-    @st.cache_data
-    def img_to_base64(img_path):
-        with open(img_path, "rb") as f:
-            return base64.b64encode(f.read()).decode()
 
     if len(selected) == 0:
         for category, col in category_columns.items():
