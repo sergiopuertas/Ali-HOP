@@ -22,7 +22,7 @@ pip install streamlit streamlit-lottie pandas
 ```bash
 git clone https://github.com/sergiopuertas/Ali-HOP.git
 cd app
-streamlit run app.py
+pip install -r requirements.txt
 ```
 
 ## 🖥️ Uso Básico
