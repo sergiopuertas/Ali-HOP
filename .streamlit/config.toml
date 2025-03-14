@@ -7,12 +7,3 @@ font="monospace"
 
 [client]
 showSidebarNavigation = false
-
-[server]
-headless = true
-port = 8501
-base = "light"
-enableCORS = false
-
-[browser]
-serverAddress = "0.0.0.0"

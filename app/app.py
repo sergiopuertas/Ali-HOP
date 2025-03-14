@@ -48,7 +48,7 @@ with cols[1]:
 
     # Mostrar presentación
     stream_data(_PRESENTACION)
-    st.container(height=80, border=False)
+    st.container(height=20, border=False)
 
     # Botón solo aparece después del streaming
     if st.session_state.stream_done:
