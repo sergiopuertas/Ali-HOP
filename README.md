@@ -19,9 +19,11 @@ https://ali-hop.streamlit.app
 pip install streamlit streamlit-lottie pandas
 ```
 ### ⚙️ Instalación
+```bash
 git clone https://github.com/sergiopuertas/Ali-HOP.git
 cd app
-streamlit run app.py
+pip install -r requirements.txt
+```
 
 ## 🖥️ Uso Básico
 ### Iniciar la aplicación desde el terminal:
