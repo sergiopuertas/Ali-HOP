@@ -243,7 +243,7 @@ with cols[1]:
             st.download_button(
                         label="Descargar",
                         data=pdf_buffer,
-                        file_name=f"lista_alimentación_{','.join(selected.lower())}.pdf",
+                        file_name=f"lista_alimentación_{','.join(selected)}.pdf",
                         mime="application/pdf",
                         key="download_button",
                         use_container_width=True
