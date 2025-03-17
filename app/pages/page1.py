@@ -19,7 +19,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-def generate_pdf(selected,df):
+def generate_pdf(df):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
@@ -239,11 +239,11 @@ with cols[1]:
             df["final_category"] = df.apply(worst_recommendation, axis=1)
 
         with col[1]:
-            pdf_buffer = generate_pdf(selected,df)
+            pdf_buffer = generate_pdf(df)
             st.download_button(
                         label="Descargar",
                         data=pdf_buffer,
-                        file_name=f"alimentos_{','.join(selected)}.pdf",
+                        file_name=f"lista_alimentación_{','.join(selected.lower())}.pdf",
                         mime="application/pdf",
                         key="download_button",
                         use_container_width=True
