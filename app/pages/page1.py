@@ -19,7 +19,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-def generate_pdf(selected,df):
+def generate_pdf(df):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
@@ -34,9 +34,8 @@ def generate_pdf(selected,df):
     # Título principal
     c.setFont("Helvetica-Bold", 14)
     c.drawString(100, y_start, f"Lista de alimentos a limitar o no consumir: ")
-    c.drawString(100, y_start - 20, f"{', '.join(selected)}")
 
-    y = y_start - 60
+    y = y_start - 40
 
     def draw(y):
 
@@ -240,11 +239,11 @@ with cols[1]:
             df["final_category"] = df.apply(worst_recommendation, axis=1)
 
         with col[1]:
-            pdf_buffer = generate_pdf(selected,df)
+            pdf_buffer = generate_pdf(df)
             st.download_button(
                         label="Descargar",
                         data=pdf_buffer,
-                        file_name=f"alimentos_{','.join(selected)}.pdf",
+                        file_name=f"lista_alimentación_{','.join(selected.lower())}.pdf",
                         mime="application/pdf",
                         key="download_button",
                         use_container_width=True
