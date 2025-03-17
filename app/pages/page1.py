@@ -34,9 +34,8 @@ def generate_pdf(selected,df):
     # Título principal
     c.setFont("Helvetica-Bold", 14)
     c.drawString(100, y_start, f"Lista de alimentos a limitar o no consumir: ")
-    c.drawString(100, y_start - 20, f"{', '.join(selected)}")
 
-    y = y_start - 60
+    y = y_start - 40
 
     def draw(y):
 
