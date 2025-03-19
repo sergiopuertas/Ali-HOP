@@ -21,8 +21,8 @@ jobs:
 
       - name: Configurar Git y crear commit
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "sergiopuertasp@gmail.com"
+          git config --local user.name "seriopuertas"
           git add .
           # Se utiliza --allow-empty para forzar el commit en caso de que no se detecten cambios (opcional)
           git commit -m "Commit diario automático" --allow-empty
