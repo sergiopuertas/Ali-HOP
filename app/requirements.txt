@@ -35,7 +35,7 @@ pillow==11.1.0
 plotly==6.0.0
 prometheus_client==0.21.1
 protobuf==5.29.3
-psycopg2==2.9.10
+psycopg2-binary==2.9.10
 pyarrow==19.0.1
 pydeck==0.9.1
 pymdown-extensions==10.14.3
