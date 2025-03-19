@@ -24,9 +24,9 @@ def generate_pdf(df):
     c = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
 
-    col1_x = 75
-    col2_x = 200
-    col3_x = 125
+    col1_x = 80
+    col2_x = 270
+    col3_x = 460
 
     y_start = height - 100
     y_offset = 20
@@ -108,7 +108,7 @@ def stream_message(text, speaker: str = "left"):
 # 3. Interfaz de chat
 left_col, right_col = st.columns(2)
 
-"""# Mostrar historial de mensajes
+# Mostrar historial de mensajes
 for msg_id in st.session_state.messages:
     msg_data = st.session_state[msg_id]
 
@@ -121,9 +121,8 @@ for msg_id in st.session_state.messages:
         with right_col:
             st.container(height=85, border=False)
             st.text(f"{msg_data['displayed']}")
-"""
 
-"""# 4. Flujo de conversación
+# 4. Flujo de conversación
 if not st.session_state.messages:
     with left_col:
         stream_message("Me gustaría que le echases un vistazo a los resultados de tu último análisis y me localices los electrolitos.📄", speaker="left")
@@ -143,7 +142,7 @@ if not st.session_state.messages:
     with left_col:
         st.container(height=75, border=False)
         stream_message("¡Genial! Cuando los hayas encontrado, utiliza la herramienta de abajo para seleccionarlos y ver qué alimentos deberías limitar dependiendo de qué electrolitos tengas altos 📈", speaker="left")
-        st.container(height=45, border=False)"""
+        st.container(height=45, border=False)
 
 st.markdown("""
 <style>
@@ -189,7 +188,7 @@ def get_food_data(electrolitos):
             FROM alimentos
             WHERE {' OR '.join([f"{e} IS NOT NULL" for e in electrolitos])}
         """
-        return conn.query(query)
+        return conn.query(query, ttl = 600)
     except Exception as e:
         st.error(f"Error al cargar datos: {e}")
         return pd.DataFrame()
@@ -225,7 +224,6 @@ with cols[1]:
     df = get_food_data(selected)
     if not df.empty:
         order = {"aconsejada": 1, "limitada": 2, "desaconsejada": 3}
-
         if len(selected) == 1:
             df["final_category"] = df[selected[0]]
         else:
@@ -235,18 +233,16 @@ with cols[1]:
                     key=lambda x: order.get(x, 0)
                 )
             df["final_category"] = df.apply(get_category, axis=1)
-    with col2:
-        pdf_buffer = generate_pdf(df)
-        st.download_button(
-            "Descargar",
-            data=pdf_buffer,
-            file_name="recomendaciones_alimenticias.pdf",
-            mime="application/pdf"
-        )
+        with col2:
+            pdf_buffer = generate_pdf(df)
+            st.download_button(
+                "Descargar",
+                data=pdf_buffer,
+                file_name="recomendaciones_alimenticias.pdf",
+                mime="application/pdf"
+            )
 
     # Consulta a la base de datos con cada cambio
-
-
 
     col_bien,_, col_limitar,_, col_mal = st.columns((2,1, 2,1, 2))
 
@@ -259,8 +255,6 @@ with cols[1]:
     if df.empty:
         pass
     else:
-        # Botón de descarga
-
         # Mostrar resultados
         for category, col in category_columns.items():
             col.subheader("RECOMENDADO" if category == "aconsejada" else
