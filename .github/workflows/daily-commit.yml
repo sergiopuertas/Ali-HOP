@@ -26,4 +26,5 @@ jobs:
           git add .
           # Se utiliza --allow-empty para forzar el commit en caso de que no se detecten cambios (opcional)
           git commit -m "Commit diario automático" --allow-empty
-          git push origin HEAD
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+
