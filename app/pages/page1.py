@@ -144,6 +144,21 @@ if not st.session_state.messages:
         stream_message("¡Genial! Cuando los hayas encontrado, utiliza la herramienta de abajo para seleccionarlos y ver qué alimentos deberías limitar dependiendo de qué electrolitos tengas altos 📈", speaker="left")
         st.container(height=45, border=False)
 
+@st.cache_data(ttl=600)
+def get_food_data(electrolitos):
+    if not electrolitos:
+        return pd.DataFrame()
+    try:
+        query = f"""
+            SELECT alimento, image, {', '.join(electrolitos)}
+            FROM alimentos
+            WHERE {' OR '.join([f"{e} IS NOT NULL" for e in electrolitos])}
+        """
+        return conn.query(query, ttl = 600)
+    except Exception as e:
+        st.error(f"Error al cargar datos: {e}")
+        return pd.DataFrame()
+
 st.markdown("""
 <style>
     /* Estilos para la flecha minimalista */
@@ -177,21 +192,7 @@ st.markdown("""
 </script>
 """, unsafe_allow_html=True)
 
-# Función para obtener datos de la base de datos
-def get_food_data(electrolitos):
-    if not electrolitos:
-        return pd.DataFrame()
 
-    try:
-        query = f"""
-            SELECT alimento, image, {', '.join(electrolitos)}
-            FROM alimentos
-            WHERE {' OR '.join([f"{e} IS NOT NULL" for e in electrolitos])}
-        """
-        return conn.query(query, ttl = 600)
-    except Exception as e:
-        st.error(f"Error al cargar datos: {e}")
-        return pd.DataFrame()
 
 
 # Estado de la aplicación

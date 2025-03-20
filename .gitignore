@@ -6,6 +6,5 @@ csuve.py
 .idea
 
 .streamlit/secrets.toml
-.github/
 .server/
 alimentos.csv
