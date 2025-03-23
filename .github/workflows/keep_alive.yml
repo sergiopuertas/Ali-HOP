@@ -32,6 +32,9 @@ jobs:
 
           driver.get("https://ali-hop.streamlit.app/")  
           print("Página visitada con éxito")
-
+          driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+          time.sleep(10)
+          driver.execute_script("window.scrollTo(0, 0);")
+          time.sleep(60)
           driver.quit()
           EOF
