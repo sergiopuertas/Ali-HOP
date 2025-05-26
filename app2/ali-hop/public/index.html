@@ -242,7 +242,10 @@
         // Al cargar la página, traemos los datos del servidor
         async function loadFoodData() {
           try {
-            const res = await fetch('/api');
+            const res = await fetch(`/api/alimentos?ions=${selectedIons.join(',')}`)
+                          .then(r => r.json())
+                          .then(data => showResults(data));
+
             if (!res.ok) throw new Error(res.statusText);
             foodData = await res.json();
           } catch (err) {
