@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Médico Nutricional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+
+        .message-left {
+            position: relative;
+            background-color: #f3f4f6;
+            border-radius: 1rem 1rem 1rem 0;
+        }
+        .message-right {
+            position: relative;
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 1rem 1rem 0 1rem;
+        }
+        .message-left:after, .message-right:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+        }
+        .message-left:after {
+            left: -10px;
+            border-right-color: #f3f4f6;
+            border-left: 0;
+        }
+        .message-right:after {
+            right: -10px;
+            border-left-color: #3b82f6;
+            border-right: 0;
+        }
+        .scroll-arrow {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+        .food-card {
+            transition: all 0.3s ease;
+        }
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .ion-pill {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .ion-pill:hover {
+            transform: scale(1.05);
+        }
+        .ion-pill.selected {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid #3b82f6;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #3b82f6; }
+        }
+        .start-btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Homepage -->
+    <div id="homepage" class="container mx-auto px-4 py-12 max-w-4xl">
+        <div class="text-center mb-8">
+            <lottie-player
+                src="https://lottie.host/66bdfdea-9ae1-4873-a970-8d4846d04256/QZjjsPQNDo.json"
+                background="transparent"
+                speed="1"
+                style="width: 100%; height: 300px;"
+                loop
+                autoplay>
+            </lottie-player>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-8 mb-8">
+            <div id="typewriter-text" class="text-lg text-gray-700 mb-8 whitespace-pre-line">
+                Soy tu asistente médico nutricional y estoy aquí para ayudarte a cuidar tu alimentación y mejorar tu bienestar. Mi objetivo es guiarte para que identifiques y limites aquellos alimentos que pueden no ser beneficiosos para tu salud 💪.
+                ¿Me ayudarías?
+            </div>
+
+            <div class="text-center">
+                <button id="start-btn"
+                        class="start-btn bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-8 rounded-full text-xl hidden">
+                    <i class="fas fa-flask mr-2"></i> Empezar <i class="fas fa-flask ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Analysis Page (hidden initially) -->
+    <div id="analysis-page" class="container mx-auto px-4 py-8 max-w-6xl hidden">
+        <!-- Chat Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <!-- Left Messages -->
+            <div class="space-y-4">
+                <div class="message-left p-4 max-w-xs md:max-w-md">
+                    <p>Me gustaría que le echases un vistazo a los resultados de tu último análisis y me localices los electrolitos.📄</p>
+                </div>
+                <div class="h-16"></div>
+
+                <div class="message-left p-4 max-w-xs md:max-w-md">
+                    <p>Son sustancias que se encuentran en el cuerpo humano en forma predominante de sales minerales, tales como sodio, potasio o fósforo.🔋</p>
+                </div>
+
+                <div class="h-16"></div>
+
+                <div class="message-left p-4 max-w-xs md:max-w-md">
+                    <p>¡Genial! Cuando los hayas encontrado, utiliza la herramienta de abajo para seleccionarlos y ver qué alimentos deberías limitar dependiendo de qué electrolitos tengas altos 📈</p>
+                </div>
+                <div class="h-10"></div>
+            </div>
+
+            <!-- Right Messages -->
+            <div class="space-y-4">
+                <div class="h-20"></div>
+                <div class="message-right p-4 max-w-xs md:max-w-md ml-auto">
+                    <p>Pero... ¿Qué son los electrolitos?🧐</p>
+                </div>
+
+                <div class="h-20"></div>
+                <div class="message-right p-4 max-w-xs md:max-w-md ml-auto">
+                    <p>¡Ah vale, lo entiendo! Buscaré los datos.🔎</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Arrow -->
+        <div class="text-center my-12">
+            <a href="#selection-section" class="scroll-arrow inline-block text-blue-500 text-5xl">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+        
+        <div class="h-24"></div>
+        
+        <!-- Selection Section -->
+        <div id="selection-section" class="bg-white rounded-xl shadow-md p-6 mb-12">
+            <h2 class="text-2xl font-bold text-center mb-8 text-gray-800">Selecciona los electrolitos y descubre qué alimentos pueden ser desaconsejables para ti</h2>
+            
+            <!-- Electrolyte Pills -->
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <div class="ion-pill border border-gray-300 px-4 py-2 rounded-full" data-ion="sodio">
+                    <i class="fas fa-atom mr-2"></i> Sodio
+                </div>
+                <div class="ion-pill border border-gray-300 px-4 py-2 rounded-full" data-ion="potasio">
+                    <i class="fas fa-atom mr-2"></i> Potasio
+                </div>
+                <div class="ion-pill border border-gray-300 px-4 py-2 rounded-full" data-ion="fosforo">
+                    <i class="fas fa-atom mr-2"></i> Fósforo
+                </div>
+            </div>
+            
+            <div class="text-center mb-8">
+                <button id="analyze-btn" class="bg-gray-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg">
+                    <i class="fas fa-search mr-2"></i> Analizar selección
+                </button>
+            </div>
+            
+            <!-- Results Section -->
+            <div id="results-section" class="hidden">
+                <div class="flex justify-end mb-4">
+                    <button id="download-btn" class="bg-white hover:bg-gray-200 text-black font-medium py-2 px-4 rounded-lg flex items-center">
+                        <i class="fas fa-download mr-2"></i> Descargar recomendaciones
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                    <!-- Recomendado -->
+                    <div class="bg-green-50 rounded-xl p-4">
+                        <h3 class="text-center text-xl font-semibold text-green-600 mb-4">
+                            <i class="fas fa-check-circle mr-2"></i> RECOMENDADO
+                        </h3>
+                        <div id="recomendado" class="grid grid-cols-2 gap-4">
+                            <!-- Food items will be added here by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Limitar -->
+                    <div class="bg-yellow-50 rounded-xl p-4">
+                        <h3 class="text-center text-xl font-semibold text-yellow-600 mb-4">
+                            <i class="fas fa-exclamation-triangle mr-2"></i> LIMITAR
+                        </h3>
+                        <div id="limitar" class="grid grid-cols-2 gap-4">
+                            <!-- Food items will be added here by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Eliminar -->
+                    <div class="bg-red-50 rounded-xl p-4">
+                        <h3 class="text-center text-xl font-semibold text-red-600 mb-4">
+                            <i class="fas fa-times-circle mr-2"></i> ELIMINAR
+                        </h3>
+                        <div id="eliminar" class="grid grid-cols-2 gap-4">
+                            <!-- Food items will be added here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="h-24"></div>
+    </div>
+
+    <script>
+    let foodData = {};
+
+        // Al cargar la página, traemos los datos del servidor
+        async function loadFoodData() {
+          try {
+            const res = await fetch('/api');
+            if (!res.ok) throw new Error(res.statusText);
+            foodData = await res.json();
+          } catch (err) {
+            console.error('No se pudo cargar foodData:', err);
+          }
+        }
+
+        // Typewriter effect for homepage
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFoodData();
+            const textElement = document.getElementById('typewriter-text');
+            const originalText = textElement.textContent;
+            textElement.textContent = '';
+
+            let i = 0;
+            const speed = 20; // milliseconds per character
+            
+            function typeWriter() {
+                if (i < originalText.length) {
+                    textElement.textContent += originalText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    // Show start button after typing completes
+                    document.getElementById('start-btn').classList.remove('hidden');
+                }
+            }
+            
+            setTimeout(typeWriter, 1000);
+        });
+
+        // Start button handler
+        document.getElementById('start-btn').addEventListener('click', function() {
+            document.getElementById('homepage').classList.add('hidden');
+            document.getElementById('analysis-page').classList.remove('hidden');
+            
+            // Smooth scroll to top of analysis page
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Smooth scroll for arrow
+        document.querySelector('.scroll-arrow')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('#selection-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+
+        // Electrolyte pill selection
+        const ionPills = document.querySelectorAll('.ion-pill');
+        const selectedIons = new Set();
+        
+        ionPills.forEach(pill => {
+            pill.addEventListener('click', function() {
+                const ion = this.getAttribute('data-ion');
+                
+                if (selectedIons.has(ion)) {
+                    selectedIons.delete(ion);
+                    this.classList.remove('selected');
+                } else {
+                    selectedIons.add(ion);
+                    this.classList.add('selected');
+                }
+            });
+        });
+
+        // Analyze button handler
+        document.getElementById('analyze-btn')?.addEventListener('click', function() {
+            if (selectedIons.size === 0) {
+                alert('Por favor, selecciona al menos un electrolito para analizar.');
+                return;
+            }
+            
+            showResults(Array.from(selectedIons));
+            document.getElementById('results-section').classList.remove('hidden');
+            
+            // Smooth scroll to results
+            document.getElementById('results-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+
+        // Show results based on selected ions
+    function showResults(selectedIons) {
+      // Limpiar resultados previos
+      ['recomendado','limitar','eliminar'].forEach(id => {
+        document.getElementById(id).innerHTML = '';
+      });
+
+      // Mapa auxiliar para trackear la categoría más restrictiva de cada alimento
+      const finalMap = new Map();
+      // valores de prioridad: cuanto mayor, más restrictivo
+      const PRIORITY = { recomendado: 1, limitar: 2, eliminar: 3 };
+
+      // Recorremos cada ion seleccionado
+      selectedIons.forEach(ion => {
+        const data = foodData[ion] || { recomendado:[], limitar:[], eliminar:[] };
+
+        // Para cada categoría y alimento, actualizamos si su prioridad es mayor
+        Object.entries(data).forEach(([cat, foods]) => {
+          foods.forEach(food => {
+            const prev = finalMap.get(food.name);
+            const currPrio = PRIORITY[cat];
+            if (!prev || currPrio > prev.prio) {
+              finalMap.set(food.name, { item: food, prio: currPrio });
+            }
+          });
+        });
+      });
+
+      // Ahora volcamos finalMap en los contenedores correspondientes
+      finalMap.forEach(({ item, prio }) => {
+        let target;
+        if (prio === PRIORITY.recomendado)   target = 'recomendado';
+        else if (prio === PRIORITY.limitar)  target = 'limitar';
+        else /* prio===PRIORITY.eliminar */  target = 'eliminar';
+
+        document.getElementById(target).innerHTML += createFoodCard(item, target === 'recomendado' ? 'green'
+                                                                              : target === 'limitar'   ? 'yellow'
+                                                                                                       : 'red');
+      });
+    }
+
+
+    // Create food card HTML
+        function createFoodCard(food, color) {
+            const colorClasses = {
+                green: 'border-green-200 bg-white',
+                yellow: 'border-yellow-200 bg-white',
+                red: 'border-red-200 bg-white'
+            };
+            
+            return `
+                <div class="food-card ${colorClasses[color]} border rounded-lg p-3 flex flex-col items-center">
+                    <img src="${food.image}" alt="${food.name}" class="w-16 h-16 object-cover rounded-full mb-2">
+                    <p class="text-sm font-medium text-center">${food.name}</p>
+                </div>
+            `;
+        }
+
+    document.getElementById('download-btn').addEventListener('click', async function () {
+          // 1) Recogemos iones seleccionados
+          const selectedIons = Array.from(
+            document.querySelectorAll('.ion-pill.selected')
+          ).map(p => p.dataset.ion);
+
+          if (selectedIons.length === 0) {
+            return alert('Selecciona al menos un ion para descargar.');
+          }
+
+          // 2) Determinamos categoría final de cada alimento
+          const PRIORITY = { recomendado: 1, limitar: 2, eliminar: 3 };
+          const finalMap = new Map();
+
+          selectedIons.forEach(ion => {
+            const data = foodData[ion] || { recomendado: [], limitar: [], eliminar: [] };
+            Object.entries(data).forEach(([cat, arr]) => {
+              arr.forEach(food => {
+                const prev = finalMap.get(food.name);
+                if (!prev || PRIORITY[cat] > PRIORITY[prev.cat]) {
+                  finalMap.set(food.name, { item: food, cat });
+                }
+              });
+            });
+          });
+
+          // 3) Agrupamos en columnas
+          const cols = { recomendado: [], limitar: [], eliminar: [] };
+          for (const { item, cat } of finalMap.values()) {
+            cols[cat].push(item.name);
+          }
+
+          // 4) Creamos el PDF
+          const { PDFDocument, StandardFonts } = PDFLib;
+          const pdfDoc = await PDFDocument.create();
+          let page = pdfDoc.addPage([612, 792]); // Letter
+          const helv = await pdfDoc.embedFont(StandardFonts.Helvetica);
+          const helvB = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+          // Posiciones
+          const x = { recomendado: 60, limitar: 250, eliminar: 420 };
+          let y = 750;
+
+          // Título
+          page.drawText('Recomendaciones alimenticias', {
+            x: 60, y, size: 16, font: helvB,
+          });
+          y -= 30;
+
+          // Cabeceras
+          ['recomendado','limitar','eliminar'].forEach(cat => {
+            page.drawText(cat.toUpperCase(), {
+              x: x[cat], y, size: 12, font: helvB,
+            });
+          });
+          y -= 20;
+
+          // Filas
+          const max = Math.max(cols.recomendado.length, cols.limitar.length, cols.eliminar.length);
+          for (let i = 0; i < max; i++) {
+            if (y < 50) {
+              // Nueva página
+              y = 750;
+              page = pdfDoc.addPage([612, 792]);
+            }
+            ['recomendado','limitar','eliminar'].forEach(cat => {
+              const name = cols[cat][i];
+              if (name) {
+                page.drawText(name, {
+                  x: x[cat], y, size: 10, font: helv,
+                });
+              }
+            });
+            y -= 18;
+          }
+
+          // 5) Descargar PDF
+          const pdfBytes = await pdfDoc.save();
+          const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'recomendaciones.pdf';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        });
+
+    </script>
+</body>
+</html>

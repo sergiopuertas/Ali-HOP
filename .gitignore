@@ -8,3 +8,5 @@ csuve.py
 .streamlit/secrets.toml
 .server/
 alimentos.csv
+
+app2/.env
