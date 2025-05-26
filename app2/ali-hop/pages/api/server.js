@@ -1,15 +1,15 @@
 // api/alimentos.js
 // Función serverless para Vercel
-// Recuerda configurar en Vercel la variable de entorno NEON_DATABASE_URL
+// Recuerda configurar en Vercel la variable de entorno NEON_URL_DATABASE
 
 const { Client } = require('pg');
 
 module.exports = async (req, res) => {
   // Leer query params si quieres filtrar por iones
-  // const { ions } = req.query;
+  //const { ions } = req.query;
 
   const client = new Client({
-    connectionString: process.env.NEON_DATABASE_URL,
+    connectionString: process.env.NEON_URL_DATABASE,
     ssl: { rejectUnauthorized: false }
   });
 
